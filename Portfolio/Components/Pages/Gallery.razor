@@ -1,0 +1,225 @@
+﻿@page "/gallery"
+@using Microsoft.AspNetCore.Components.Forms
+@using Portfolio.Models
+
+<PageTitle>Gallery</PageTitle>
+
+<section class="gallery-page">
+    <div class="page-header centered">
+        <p class="page-kicker">Flying Ink Sparks</p>
+        <h1 class="page-title">Gallery</h1>
+        <p class="page-subtitle">Digital Art Gallery</p>
+    </div>
+
+    <section class="gallery-admin">
+        <h2 class="admin-title">Add Artwork</h2>
+
+        <EditForm Model="@newArtwork"
+                  OnValidSubmit="@HandleSubmit"
+                  FormName="add-artwork-form"
+                  class="artwork-form">
+            <DataAnnotationsValidator />
+
+            <div class="form-grid">
+                <div class="form-group form-group-wide">
+                    <label>Image</label>
+                    <InputFile OnChange="HandleFileSelected" accept="image/*" />
+
+                    @if (!string.IsNullOrWhiteSpace(imagePreviewUrl))
+                    {
+                        <div class="upload-preview">
+                            <img src="@imagePreviewUrl" alt="Preview" />
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>Title</label>
+                    <InputText @bind-Value="newArtwork.Title" class="form-input" />
+                </div>
+
+                <div class="form-group">
+                    <label>Size</label>
+                    <InputText @bind-Value="newArtwork.Size" class="form-input" />
+                </div>
+
+                <div class="form-group">
+                    <label>Material</label>
+                    <InputText @bind-Value="newArtwork.Material" class="form-input" />
+                </div>
+
+                <div class="form-group">
+                    <label>Flow</label>
+                    <InputSelect @bind-Value="newArtwork.Flow" class="form-input">
+                        <option value="">Select flow</option>
+                        <option value="Calligraphy">Calligraphy</option>
+                        <option value="Xieyi">Xieyi</option>
+                        <option value="Chinoiserie">Chinoiserie</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group form-group-wide">
+                    <label>Description (optional)</label>
+                    <InputTextArea @bind-Value="newArtwork.Description"
+                                   class="form-input form-textarea" />
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(formMessage))
+            {
+                <p class="form-message">@formMessage</p>
+            }
+
+            <button type="submit" class="save-btn">
+                Add Artwork
+            </button>
+        </EditForm>
+    </section>
+
+    <div class="flow-filter">
+        <button type="button"
+                class="filter-btn @(selectedFlow == "All" ? "active" : "")"
+                @onclick='() => SelectFlow("All")'>
+            All
+        </button>
+
+        <button type="button"
+                class="filter-btn @(selectedFlow == "Calligraphy" ? "active" : "")"
+                @onclick='() => SelectFlow("Calligraphy")'>
+            Calligraphy
+        </button>
+
+        <button type="button"
+                class="filter-btn @(selectedFlow == "Xieyi" ? "active" : "")"
+                @onclick='() => SelectFlow("Xieyi")'>
+            Xieyi
+        </button>
+
+        <button type="button"
+                class="filter-btn @(selectedFlow == "Chinoiserie" ? "active" : "")"
+                @onclick='() => SelectFlow("Chinoiserie")'>
+            Chinoiserie
+        </button>
+    </div>
+
+    <div class="gallery-grid">
+        @if (FilteredArtworks.Any())
+        {
+            @foreach (var artwork in FilteredArtworks)
+            {
+                <article class="gallery-card">
+                    <div class="gallery-image-wrap">
+                        <img src="@artwork.ImageUrl"
+                             alt="@artwork.Title"
+                             class="gallery-image" />
+                    </div>
+
+                    <div class="gallery-meta">
+                        <div class="gallery-meta-top">
+                            <h3>@artwork.Title</h3>
+
+                            <button type="button"
+                                    class="delete-btn"
+                                    @onclick="() => DeleteArtwork(artwork.Id)">
+                                Delete
+                            </button>
+                        </div>
+
+                        <p class="meta-line">@artwork.Size • @artwork.Material</p>
+                        <p class="meta-flow">@artwork.Flow</p>
+
+                        @if (!string.IsNullOrWhiteSpace(artwork.Description))
+                        {
+                            <p class="meta-description">@artwork.Description</p>
+                        }
+                    </div>
+                </article>
+            }
+        }
+        else
+        {
+            <p class="empty-state">No artworks added yet.</p>
+        }
+    </div>
+</section>
+
+@code {
+    private string selectedFlow = "All";
+    private ArtworkFormModel newArtwork = new();
+    private List<ArtworkItem> artworks = new();
+
+    private string? imagePreviewUrl;
+    private string? formMessage;
+
+    private IEnumerable<ArtworkItem> FilteredArtworks =>
+        selectedFlow == "All"
+            ? artworks
+            : artworks.Where(a => a.Flow == selectedFlow);
+
+    private void SelectFlow(string flow)
+    {
+        selectedFlow = flow;
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        formMessage = null;
+
+        var file = e.File;
+        if (file is null)
+            return;
+
+        using var stream = file.OpenReadStream(10 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        imagePreviewUrl = $"data:{file.ContentType};base64,{base64}";
+    }
+
+    private void HandleSubmit()
+    {
+        formMessage = null;
+
+        if (string.IsNullOrWhiteSpace(imagePreviewUrl))
+        {
+            formMessage = "Please choose an image.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newArtwork.Title) ||
+            string.IsNullOrWhiteSpace(newArtwork.Size) ||
+            string.IsNullOrWhiteSpace(newArtwork.Material) ||
+            string.IsNullOrWhiteSpace(newArtwork.Flow))
+        {
+            formMessage = "Please fill all required fields.";
+            return;
+        }
+
+        artworks.Insert(0, new ArtworkItem
+        {
+            Id = Guid.NewGuid(),
+            Title = newArtwork.Title.Trim(),
+            Size = newArtwork.Size.Trim(),
+            Material = newArtwork.Material.Trim(),
+            Description = string.IsNullOrWhiteSpace(newArtwork.Description)
+                ? null
+                : newArtwork.Description.Trim(),
+            Flow = newArtwork.Flow.Trim(),
+            ImageUrl = imagePreviewUrl
+        });
+
+        newArtwork = new ArtworkFormModel();
+        imagePreviewUrl = null;
+        formMessage = "Artwork added.";
+    }
+
+    private void DeleteArtwork(Guid id)
+    {
+        var item = artworks.FirstOrDefault(x => x.Id == id);
+        if (item is not null)
+        {
+            artworks.Remove(item);
+        }
+    }
+}

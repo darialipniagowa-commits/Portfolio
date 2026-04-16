@@ -1,0 +1,7 @@
+﻿@inject NavigationManager Nav
+
+<div class="culture-switcher">
+    <a class="lang-btn" href="@($"/set-culture/lv?returnUrl={Uri.EscapeDataString(new Uri(Nav.Uri).PathAndQuery)}")">LV</a>
+    <span class="divider">|</span>
+    <a class="lang-btn" href="@($"/set-culture/en?returnUrl={Uri.EscapeDataString(new Uri(Nav.Uri).PathAndQuery)}")">EN</a>
+</div>

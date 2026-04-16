@@ -1,0 +1,11 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<NavMenu> L
+
+<nav class="site-nav">
+    <NavLink href="/about">@L["About"]</NavLink>
+    <NavLink href="/gallery">@L["Gallery"]</NavLink>
+    <NavLink href="/contact">@L["Exhibitions"]</NavLink>
+    <NavLink href="/projects">@L["Projects"]</NavLink>
+    <NavLink href="/shop">@L["Shop"]</NavLink>
+    <NavLink href="/contact">@L["Contact"]</NavLink>
+</nav>
