@@ -1,0 +1,72 @@
+﻿@page "/exhibitions"
+@using Portfolio.Models
+@inject NavigationManager Nav
+
+<PageTitle>Izstādes</PageTitle>
+
+<section class="exhibitions-floating-page">
+    <div class="page-header">
+   
+        <h1 class="page-title">Izstādes</h1>
+    </div>
+
+    <div class="floating-exhibitions">
+        @foreach (var item in Exhibitions.Select((value, index) => new { value, index }))
+        {
+            <article class="floating-card card-@(item.index + 1)">
+                <div class="floating-image-wrap">
+                    <img src="@item.value.ImageUrl" alt="@item.value.Title" class="floating-image" />
+                </div>
+
+                <div class="floating-text">
+                    <div class="floating-year">@item.value.Year</div>
+                    <h2 class="floating-title">@item.value.Title</h2>
+                    <p class="floating-location">@item.value.Location</p>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+@code {
+   
+
+    private List<ExhibitionItem> Exhibitions = new()
+    {
+        new()
+        {
+            Year = "2026",
+            Title = "Spārni, kas nes pavasari",
+            Location = "grupu izstāde RCB “Vidzeme”",
+            ImageUrl = "images/exhibitions/exh1.jpg"
+        },
+        new()
+        {
+            Year = "2026",
+            Title = "Art Riga Fair Paper festivāls",
+            Location = "grupu izstāde",
+            ImageUrl = "images/exhibitions/exh2.jpg"
+        },
+        new()
+        {
+            Year = "2025",
+            Title = "Čendu, ASEAN",
+            Location = "organizācija un dalība grupu izstādē Ķīnā",
+            ImageUrl = "images/exhibitions/exh3.jpg"
+        },
+        new()
+        {
+            Year = "2025",
+            Title = "Tūkstošzimju gudrība",
+            Location = "BiArt galerija",
+            ImageUrl = "images/exhibitions/exh4.jpg"
+        },
+        new()
+        {
+            Year = "2024",
+            Title = "Padebešu ziedu vējš",
+            Location = "grupu izstāde LU Botāniskajā dārzā",
+            ImageUrl = "images/exhibitions/exh5.jpg"
+        }
+    };
+}

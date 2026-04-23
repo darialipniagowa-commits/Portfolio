@@ -1,9 +1,12 @@
 ﻿@page "/gallery"
+@page "/gallery/{mode?}"
 @rendermode InteractiveServer
 
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Extensions.Localization
+@using Portfolio.Models
 @inject IStringLocalizer<Gallery> L
+@inject Portfolio.Services.AdminState AdminState
 
 <PageTitle>@L["Title"]</PageTitle>
 
@@ -13,21 +16,16 @@
 
             <div class="gallery-heading">
                 <h1 class="gallery-title">@L["Title"]</h1>
+
+                @if (AdminState.IsAdmin)
+                {
+                    <button class="add-btn" type="button" @onclick="ToggleForm">
+                        @(showForm ? "Close" : "+ Add Artwork")
+                    </button>
+                }
             </div>
 
-            <div class="mode-switch">
-                <button class="filter-btn @(isAdminMode ? "active" : "")"
-                        @onclick="() => SwitchMode(true)">
-                    Admin
-                </button>
-
-                <button class="filter-btn @(!isAdminMode ? "active" : "")"
-                        @onclick="() => SwitchMode(false)">
-                    Public
-                </button>
-            </div>
-
-            @if (isAdminMode)
+            @if (AdminState.IsAdmin && showForm)
             {
                 <div class="gallery-admin-card">
                     <h2>Add Artwork</h2>
@@ -85,7 +83,10 @@
                         <button type="submit" class="add-btn">Add Artwork</button>
                     </EditForm>
                 </div>
+            }
 
+            @if (AdminState.IsAdmin)
+            {
                 @if (artworks.Any())
                 {
                     <div class="gallery-grid">
@@ -115,6 +116,10 @@
                             </div>
                         }
                     </div>
+                }
+                else
+                {
+                    <p class="empty-state">@L["EmptyCategory"]</p>
                 }
             }
             else
@@ -219,8 +224,11 @@
 </section>
 
 @code {
-    private bool isAdminMode = true;
+    [Parameter]
+    public string? mode { get; set; }
+
     private string? selectedFlow;
+    private bool showForm = false;
 
     private List<ArtworkItem> artworks = new();
 
@@ -231,14 +239,14 @@
 
     private IBrowserFile? uploadedFile;
 
-    private void SwitchMode(bool adminMode)
+    protected override void OnInitialized()
     {
-        isAdminMode = adminMode;
+        AdminState.Enable(mode);
+    }
 
-        if (!adminMode)
-        {
-            selectedFlow = null;
-        }
+    private void ToggleForm()
+    {
+        showForm = !showForm;
     }
 
     private void OpenCategory(string flow)
@@ -289,6 +297,7 @@
         };
 
         uploadedFile = null;
+        showForm = false;
 
         return Task.CompletedTask;
     }

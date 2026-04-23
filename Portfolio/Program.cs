@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Portfolio.Components;
+using Portfolio.Services;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,8 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<AdminState>();
+
 var app = builder.Build();
 
 var locOptions = app.Services
@@ -34,7 +37,6 @@ app.UseRequestLocalization(locOptions);
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-/* ADD THIS */
 app.MapGet("/set-culture/{culture}", (string culture, HttpContext httpContext, string? returnUrl) =>
 {
     if (culture != "lv" && culture != "en")
@@ -52,7 +54,6 @@ app.MapGet("/set-culture/{culture}", (string culture, HttpContext httpContext, s
 
     return Results.Redirect(string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl);
 });
-/* END ADD */
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
