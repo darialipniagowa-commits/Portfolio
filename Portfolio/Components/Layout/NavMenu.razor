@@ -1,11 +1,33 @@
 ﻿@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<NavMenu> L
+@inject NavigationManager NavigationManager
+@implements IDisposable
 
 <nav class="site-nav">
     <NavLink href="/about">@L["About"]</NavLink>
     <NavLink href="/gallery">@L["Gallery"]</NavLink>
-    <NavLink href="/exhibitions">@L["Exhibitions"]</NavLink>
     <NavLink href="/projects">@L["Projects"]</NavLink>
     <NavLink href="/shop">@L["Shop"]</NavLink>
     <NavLink href="/contact">@L["Contact"]</NavLink>
 </nav>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}

@@ -1,0 +1,8 @@
+﻿@page "/admin/artworks"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Admin Artworks</PageTitle>
+
+<h1>Manage artworks</h1>
+<p>This will be your private artwork editor area.</p>

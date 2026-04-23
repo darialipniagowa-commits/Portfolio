@@ -1,8 +1,12 @@
-﻿@inherits LayoutComponentBase
+﻿@using Portfolio.Components.Layout
+@inherits LayoutComponentBase
 
 <header class="top-bar">
     <NavMenu />
-    <LanguageSwitcher />
+    <div class="header-tools">
+        <LanguageSwitcher />
+        <a href="/admin" class="admin-icon" aria-label="Admin">🔒</a>
+    </div>
 </header>
 
 <main>
