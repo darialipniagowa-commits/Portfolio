@@ -1,8 +1,75 @@
 ﻿@page "/admin/projects"
-@using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Admin")]
+
+@rendermode InteractiveServer
+
+@using Portfolio.Models
+@using Microsoft.AspNetCore.Components.Forms
 
 <PageTitle>Admin Projects</PageTitle>
 
-<h1>Manage projects</h1>
-<p>This will be your private project editor area.</p>
+<section class="portfolio-page">
+    <div class="portfolio-container">
+        <header class="portfolio-header">
+            <h1 class="portfolio-title">Admin Projects</h1>
+        </header>
+
+        <div class="admin-panel">
+            <EditForm Model="@formModel" OnValidSubmit="AddProject">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Name</label>
+                        <InputText @bind-Value="formModel.Name" class="form-input" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Year</label>
+                        <InputText @bind-Value="formModel.Year" class="form-input" />
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label>Idea</label>
+                        <InputTextArea @bind-Value="formModel.Idea" class="form-input form-textarea" />
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label>Structure</label>
+                        <InputTextArea @bind-Value="formModel.Structure" class="form-input form-textarea" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>GitHub URL</label>
+                        <InputText @bind-Value="formModel.GitHubUrl" class="form-input" />
+                    </div>
+
+                    <div class="form-field">
+                        <label>Demo GIF</label>
+                        <InputFile OnChange="HandleDemoUpload" accept=".gif,image/gif" />
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn">Save</button>
+            </EditForm>
+        </div>
+    </div>
+</section>
+
+@code {
+    private PortfolioFormModel formModel = new();
+
+    private async Task HandleDemoUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file is null)
+            return;
+
+        formModel.DemoUrl = $"images/{file.Name}";
+        await Task.CompletedTask;
+    }
+
+    private Task AddProject()
+    {
+        formModel = new PortfolioFormModel();
+        return Task.CompletedTask;
+    }
+}

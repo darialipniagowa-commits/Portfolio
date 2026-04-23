@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Components\Shared\" />
+    <Folder Include="wwwroot\images\gallery\" />
   </ItemGroup>
 
   <ItemGroup>

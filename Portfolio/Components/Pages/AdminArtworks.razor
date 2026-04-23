@@ -1,8 +1,82 @@
 ﻿@page "/admin/artworks"
-@using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Forms
+@using Portfolio.Models
 
-<PageTitle>Admin Artworks</PageTitle>
+<div class="gallery-admin-card">
+    <h2>Add Artwork</h2>
 
-<h1>Manage artworks</h1>
-<p>This will be your private artwork editor area.</p>
+    <EditForm Model="FormModel" OnValidSubmit="HandleSubmit" FormName="AddArtworkForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Image</label>
+            <InputFile OnChange="HandleImageUpload" />
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Title</label>
+                <InputText @bind-Value="FormModel.Title" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Size</label>
+                <InputText @bind-Value="FormModel.Size" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Material</label>
+                <InputText @bind-Value="FormModel.Material" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Flow</label>
+                <InputSelect @bind-Value="FormModel.Flow" class="form-input">
+                    <option value="Calligraphy">Calligraphy</option>
+                    <option value="Xieyi">Xieyi</option>
+                    <option value="Chinoiserie">Chinoiserie</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label>Year</label>
+                <InputNumber @bind-Value="FormModel.Year" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label>Price</label>
+                <InputNumber @bind-Value="FormModel.Price" class="form-input" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description (optional)</label>
+            <InputTextArea @bind-Value="FormModel.Description" class="form-input" />
+        </div>
+
+        <button type="submit" class="add-btn">Add Artwork</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public ArtworkFormModel FormModel { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<IBrowserFile?> UploadedFileChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs e)
+    {
+        await UploadedFileChanged.InvokeAsync(e.File);
+    }
+
+    private async Task HandleSubmit()
+    {
+        await OnSubmit.InvokeAsync();
+    }
+}

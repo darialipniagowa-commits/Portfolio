@@ -5,25 +5,7 @@ body {
     color: #3A3A3A;
     font-family: Georgia, "Times New Roman", serif;
 }
-.header-tools {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
 
-.admin-icon {
-    text-decoration: none;
-    color: #3A3A3A;
-    border: 1px solid #D8D2C8;
-    padding: 0.4rem 0.65rem;
-    border-radius: 999px;
-    transition: all 0.25s ease;
-}
-
-    .admin-icon:hover {
-        color: #4F6B4F;
-        border-color: #4F6B4F;
-    }
 /* ===== HEADER / NAVBAR ===== */
 .top-bar {
     display: flex;
@@ -35,30 +17,43 @@ body {
     padding: 0 1.5rem;
 }
 
-.site-nav a {
-    display: inline-flex;
+.header-tools {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    border: 1px solid #7A9D8C;
-    background: transparent;
-    color: #4F6B5C;
-    text-decoration: none;
-    font-size: 0.85rem;
-    letter-spacing: 0.06em;
-    transition: all 0.25s ease;
+    gap: 0.75rem;
 }
 
-    .site-nav a:hover {
-        background-color: #E3EDE7;
+.site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+    .site-nav a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        border: 1px solid #7A9D8C;
+        background: transparent;
         color: #4F6B5C;
+        text-decoration: none;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        transition: all 0.25s ease;
     }
 
-    .site-nav a.active {
-        background-color: #8FA89A;
-        color: #F5F3EE;
-    }
+        .site-nav a:hover {
+            background-color: #E3EDE7;
+            color: #4F6B5C;
+        }
+
+        .site-nav a.active {
+            background-color: #8FA89A;
+            color: #F5F3EE;
+        }
 
 /* ===== CULTURE SWITCHER ===== */
 .culture-switcher {
@@ -120,33 +115,10 @@ body {
         background-color: #8FA89A;
     }
 
-/* ===== SOCIAL ICONS ===== */
-.social-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    color: #4F6B5C;
-    text-decoration: none;
-    opacity: 0.88;
-    transition: all 0.25s ease;
-}
-
-    .social-icon svg {
-        width: 100%;
-        height: 100%;
-    }
-
-    .social-icon:hover {
-        color: #8FA89A;
-        opacity: 1;
-        transform: translateY(-2px);
-    }
-
 /* ===== ABOUT PAGE ===== */
 .about-section {
     padding: 4rem 0 2rem;
+    overflow: visible;
 }
 
 .about-container {
@@ -157,12 +129,13 @@ body {
     justify-content: center;
     max-width: 1120px;
     margin: 0 auto;
+    overflow: visible;
 }
 
 .about-image {
     display: flex;
     justify-content: center;
-    padding-top: 2.3rem; /* pushes image lower to align more like text start */
+    padding-top: 2.3rem;
 }
 
 .about-image-frame {
@@ -183,6 +156,7 @@ body {
         height: 22px;
         border: 2px solid #7A9D8C;
         opacity: 0.6;
+        pointer-events: none;
     }
 
     .about-image-frame::before {
@@ -203,11 +177,12 @@ body {
         width: 100%;
         max-width: 280px;
         display: block;
-        border-radius: 4px; /* more square */
+        border-radius: 4px;
     }
 
 .about-text {
     max-width: 62ch;
+    overflow: visible;
 }
 
 .about-heading {
@@ -230,9 +205,9 @@ body {
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 170px; /* longer line */
+        width: 170px;
         height: 3px;
-        background: #7A9D8C; /* plain line, no subtitle effect */
+        background: #7A9D8C;
         border-radius: 999px;
     }
 
@@ -244,13 +219,64 @@ body {
     text-justify: inter-word;
 }
 
-.about-links {
+/* ===== ABOUT FOOTER / SOCIAL ===== */
+.about-footer {
     margin-top: 2rem;
     display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
     align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
 }
+
+.about-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #4F6B5C;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    transition: color 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
+    opacity: 0.9;
+}
+
+    .social-icon:hover {
+        color: #8FA89A;
+        transform: translateY(-2px);
+        opacity: 1;
+    }
+
+    .social-icon i {
+        display: inline-block;
+        line-height: 1;
+    }
+
+/* ===== ADMIN ICON ===== */
+.about-admin-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.admin-icon {
+    cursor: pointer;
+    font-size: 1rem;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+    .admin-icon:hover {
+        opacity: 1;
+        transform: translateY(-1px);
+    }
 
 /* ===== OPTIONAL DECOR PANEL ===== */
 .about-decor-panel {
@@ -260,34 +286,36 @@ body {
     padding: 1.15rem 1rem;
     text-align: center;
     background: linear-gradient(180deg, #F8F6F1 0%, #F3EFE7 100%);
-    border-radius: 10px; /* less rounded */
+    border-radius: 10px;
     border: 1px solid rgba(122, 157, 140, 0.35);
     box-shadow: inset 0 0 0 3px rgba(122, 157, 140, 0.08), 0 12px 28px rgba(58, 58, 58, 0.06);
     position: relative;
 }
 
-    .about-decor-panel::before {
+    .about-decor-panel::before,
+    .about-decor-panel::after {
         content: "";
         position: absolute;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    .about-decor-panel::before {
         top: 10px;
         left: 10px;
         width: 30px;
         height: 20px;
         border-top: 2px solid #7A9D8C;
         border-left: 2px solid #7A9D8C;
-        opacity: 0.6;
     }
 
     .about-decor-panel::after {
-        content: "";
-        position: absolute;
         right: 10px;
         bottom: 10px;
         width: 30px;
         height: 20px;
         border-right: 2px solid #7A9D8C;
         border-bottom: 2px solid #7A9D8C;
-        opacity: 0.6;
     }
 
 .about-decor-text {
@@ -308,7 +336,6 @@ body {
     }
 
     .site-nav {
-        flex-wrap: wrap;
         gap: 1rem 1.5rem;
         padding: 1rem 1.25rem 0.5rem;
     }

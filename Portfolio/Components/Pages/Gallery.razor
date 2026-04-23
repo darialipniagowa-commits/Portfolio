@@ -1,10 +1,8 @@
 ﻿@page "/gallery"
-@page "/gallery/{mode?}"
 @rendermode InteractiveServer
 
-@using Microsoft.AspNetCore.Components.Forms
-@using Microsoft.Extensions.Localization
 @using Portfolio.Models
+@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<Gallery> L
 @inject Portfolio.Services.AdminState AdminState
 
@@ -27,62 +25,9 @@
 
             @if (AdminState.IsAdmin && showForm)
             {
-                <div class="gallery-admin-card">
-                    <h2>Add Artwork</h2>
-
-                    <EditForm Model="formModel" OnValidSubmit="AddArtwork" FormName="AddArtworkForm">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
-
-                        <div class="form-group">
-                            <label>Image</label>
-                            <InputFile OnChange="HandleImageUpload" />
-                        </div>
-
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Title</label>
-                                <InputText @bind-Value="formModel.Title" class="form-input" />
-                            </div>
-
-                            <div class="form-group">
-                                <label>Size</label>
-                                <InputText @bind-Value="formModel.Size" class="form-input" />
-                            </div>
-
-                            <div class="form-group">
-                                <label>Material</label>
-                                <InputText @bind-Value="formModel.Material" class="form-input" />
-                            </div>
-
-                            <div class="form-group">
-                                <label>Flow</label>
-                                <InputSelect @bind-Value="formModel.Flow" class="form-input">
-                                    <option value="Calligraphy">Calligraphy</option>
-                                    <option value="Xieyi">Xieyi</option>
-                                    <option value="Chinoiserie">Chinoiserie</option>
-                                </InputSelect>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Year</label>
-                                <InputNumber @bind-Value="formModel.Year" class="form-input" />
-                            </div>
-
-                            <div class="form-group">
-                                <label>Price</label>
-                                <InputNumber @bind-Value="formModel.Price" class="form-input" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Description (optional)</label>
-                            <InputTextArea @bind-Value="formModel.Description" class="form-input" />
-                        </div>
-
-                        <button type="submit" class="add-btn">Add Artwork</button>
-                    </EditForm>
-                </div>
+                <AdminArtworks FormModel="formModel"
+                               UploadedFileChanged="OnUploadedFileChanged"
+                               OnSubmit="AddArtwork" />
             }
 
             @if (AdminState.IsAdmin)
@@ -224,9 +169,6 @@
 </section>
 
 @code {
-    [Parameter]
-    public string? mode { get; set; }
-
     private string? selectedFlow;
     private bool showForm = false;
 
@@ -238,11 +180,6 @@
     };
 
     private IBrowserFile? uploadedFile;
-
-    protected override void OnInitialized()
-    {
-        AdminState.Enable(mode);
-    }
 
     private void ToggleForm()
     {
@@ -267,9 +204,9 @@
         _ => flow
     };
 
-    private void HandleImageUpload(InputFileChangeEventArgs e)
+    private void OnUploadedFileChanged(IBrowserFile? file)
     {
-        uploadedFile = e.File;
+        uploadedFile = file;
     }
 
     private Task AddArtwork()
@@ -299,7 +236,7 @@
         uploadedFile = null;
         showForm = false;
 
-        return Task.CompletedTask;
+        return Task.CompletedTask; // ✅ THIS FIXES YOUR ERROR
     }
 
     private void DeleteArtwork(Guid id)
