@@ -120,9 +120,6 @@
   <data name="&#xA;About" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="Gallery" xml:space="preserve">
-    <value>Gallery</value>
-  </data>
   <data name="Projects" xml:space="preserve">
     <value>Projects</value>
   </data>
@@ -134,5 +131,8 @@
   </data>
   <data name="Exhibitions" xml:space="preserve">
     <value>Exhibitions</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Gallery</value>
   </data>
 </root>

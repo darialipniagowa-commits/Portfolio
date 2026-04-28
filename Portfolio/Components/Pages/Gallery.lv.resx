@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Calligraphy" xml:space="preserve">
-    <value>Kalligrāfija</value>
+    <value>Ķīniešu  kaligrāfija</value>
   </data>
   <data name="Xieyi" xml:space="preserve">
-    <value>Sjiei</value>
+    <value>Se-i</value>
   </data>
   <data name="Chinoiserie" xml:space="preserve">
     <value>Ķīniešu stila māksla</value>

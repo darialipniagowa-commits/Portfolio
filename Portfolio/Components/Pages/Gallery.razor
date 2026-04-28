@@ -3,8 +3,10 @@
 
 @using Portfolio.Models
 @using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Forms
 @inject IStringLocalizer<Gallery> L
 @inject Portfolio.Services.AdminState AdminState
+@inject Portfolio.Services.ArtworkService ArtworkService
 
 <PageTitle>@L["Title"]</PageTitle>
 
@@ -13,15 +15,19 @@
         <div class="gallery-content">
 
             <div class="gallery-heading">
-                <h1 class="gallery-title">@L["Title"]</h1>
+                <img class="gallery-header-image"
+                     src="@HeaderImage"
+                     alt="@L["Title"]" />
+            </div>
 
-                @if (AdminState.IsAdmin)
-                {
+            @if (AdminState.IsAdmin)
+            {
+                <div class="gallery-admin-actions">
                     <button class="add-btn" type="button" @onclick="ToggleForm">
                         @(showForm ? "Close" : "+ Add Artwork")
                     </button>
-                }
-            </div>
+                </div>
+            }
 
             @if (AdminState.IsAdmin && showForm)
             {
@@ -37,28 +43,9 @@
                     <div class="gallery-grid">
                         @foreach (var artwork in artworks)
                         {
-                            <div class="gallery-card">
-                                <div class="gallery-card-frame">
-                                    <button type="button"
-                                            class="delete-icon"
-                                            @onclick="() => DeleteArtwork(artwork.Id)">
-                                        ×
-                                    </button>
-
-                                    <div class="gallery-image-wrap">
-                                        <img class="gallery-image" src="@artwork.ImageUrl" alt="@artwork.Title" />
-                                    </div>
-
-                                    <div class="gallery-card-info">
-                                        <h3 class="gallery-card-title">@artwork.Title</h3>
-
-                                        @if (artwork.Price.HasValue)
-                                        {
-                                            <p class="gallery-card-price">@artwork.Price.Value.ToString("0.##") €</p>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                            <GalleryCard Artwork="artwork"
+                                         IsAdmin="true"
+                                         OnDelete="DeleteArtwork" />
                         }
                     </div>
                 }
@@ -72,41 +59,24 @@
                 @if (string.IsNullOrWhiteSpace(selectedFlow))
                 {
                     <div class="public-category-grid">
-                        <button type="button"
-                                class="public-category-card calligraphy-card"
-                                @onclick='() => OpenCategory("Calligraphy")'>
-                            <div class="public-category-overlay"></div>
-                            <div class="public-category-inner">
-                                <h2>Kaligrāfija</h2>
-                                <div class="category-line"></div>
-                            </div>
+                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Calligraphy")'>
+                            <img class="category-switch-image" src="@CalligraphyCategoryImage" alt="@L["Calligraphy"]" />
                         </button>
 
-                        <button type="button"
-                                class="public-category-card xieyi-card"
-                                @onclick='() => OpenCategory("Xieyi")'>
-                            <div class="public-category-overlay"></div>
-                            <div class="public-category-inner">
-                                <h2>Sumi-e</h2>
-                                <div class="category-line"></div>
-                            </div>
+                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Xieyi")'>
+                            <img class="category-switch-image" src="@XieyiCategoryImage" alt="@L["Xieyi"]" />
                         </button>
 
-                        <button type="button"
-                                class="public-category-card chinoiserie-card"
-                                @onclick='() => OpenCategory("Chinoiserie")'>
-                            <div class="public-category-overlay"></div>
-                            <div class="public-category-inner">
-                                <h2>Chinoiserie</h2>
-                                <div class="category-line"></div>
-                            </div>
+                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Chinoiserie")'>
+                            <img class="category-switch-image" src="@ChinoiserieCategoryImage" alt="@L["Chinoiserie"]" />
                         </button>
                     </div>
                 }
                 else
                 {
-                    var categoryArtworks = artworks.Where(a => a.Flow == selectedFlow).ToList();
-                    var categoryTitle = GetCategoryTitle(selectedFlow);
+                    var categoryArtworks = artworks
+                        .Where(a => a.Flow == selectedFlow)
+                        .ToList();
 
                     <div class="public-gallery-view">
                         <div class="public-gallery-header">
@@ -114,7 +84,7 @@
                                 ← Back
                             </button>
 
-                            <h2 class="gallery-group-title">@categoryTitle</h2>
+                            <h2 class="gallery-group-title">@GetCategoryTitle(selectedFlow)</h2>
                         </div>
 
                         @if (categoryArtworks.Any())
@@ -122,37 +92,9 @@
                             <div class="gallery-grid">
                                 @foreach (var artwork in categoryArtworks)
                                 {
-                                    <div class="gallery-card">
-                                        <div class="gallery-card-frame">
-                                            <div class="gallery-image-wrap">
-                                                <img class="gallery-image" src="@artwork.ImageUrl" alt="@artwork.Title" />
-
-                                                <div class="gallery-hover-info">
-                                                    <p><strong>@L["Size"]:</strong> @artwork.Size</p>
-                                                    <p><strong>@L["Material"]:</strong> @artwork.Material</p>
-
-                                                    @if (artwork.Year.HasValue)
-                                                    {
-                                                        <p><strong>@L["Year"]:</strong> @artwork.Year</p>
-                                                    }
-
-                                                    @if (!string.IsNullOrWhiteSpace(artwork.Description))
-                                                    {
-                                                        <p><strong>@L["Description"]:</strong> @artwork.Description</p>
-                                                    }
-                                                </div>
-                                            </div>
-
-                                            <div class="gallery-card-info">
-                                                <h3 class="gallery-card-title">@artwork.Title</h3>
-
-                                                @if (artwork.Price.HasValue)
-                                                {
-                                                    <p class="gallery-card-price">@artwork.Price.Value.ToString("0.##") €</p>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <GalleryCard Artwork="artwork"
+                                                 IsAdmin="false"
+                                                 OnDelete="DeleteArtwork" />
                                 }
                             </div>
                         }
@@ -170,7 +112,8 @@
 
 @code {
     private string? selectedFlow;
-    private bool showForm = false;
+    private bool showForm;
+    private IBrowserFile? uploadedFile;
 
     private List<ArtworkItem> artworks = new();
 
@@ -179,8 +122,24 @@
         Flow = "Calligraphy"
     };
 
-    private IBrowserFile? uploadedFile;
+    private bool IsLv =>
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv";
 
+    private string HeaderImage =>
+        IsLv ? "/gallery/name2.png" : "/gallery/finseng.png";
+
+    private string CalligraphyCategoryImage =>
+        IsLv ? "/gallery/lv1.png" : "/gallery/eng1.png";
+
+    private string XieyiCategoryImage =>
+        IsLv ? "/gallery/lv2.png" : "/gallery/eng2.png";
+
+    private string ChinoiserieCategoryImage =>
+        IsLv ? "/gallery/lv3.png" : "/gallery/eng3.png";
+        protected override async Task OnInitializedAsync()
+{
+    artworks = await ArtworkService.GetArtworksAsync();
+}
     private void ToggleForm()
     {
         showForm = !showForm;
@@ -198,9 +157,9 @@
 
     private string GetCategoryTitle(string flow) => flow switch
     {
-        "Calligraphy" => "Kaligrāfija",
-        "Xieyi" => "Sumi-e",
-        "Chinoiserie" => "Chinoiserie",
+        "Calligraphy" => L["Calligraphy"],
+        "Xieyi" => L["Xieyi"],
+        "Chinoiserie" => L["Chinoiserie"],
         _ => flow
     };
 
@@ -209,42 +168,45 @@
         uploadedFile = file;
     }
 
-    private Task AddArtwork()
+   private async Task AddArtwork()
+{
+    var imageUrl = "/images/placeholder.jpg";
+
+    if (uploadedFile is not null)
     {
-        var artwork = new ArtworkItem
-        {
-            Id = Guid.NewGuid(),
-            Title = formModel.Title,
-            Size = formModel.Size,
-            Material = formModel.Material,
-            Year = formModel.Year,
-            Description = formModel.Description,
-            Flow = formModel.Flow,
-            Price = formModel.Price,
-            ImageUrl = uploadedFile is not null
-                ? $"images/{uploadedFile.Name}"
-                : "/images/placeholder.jpg"
-        };
-
-        artworks.Add(artwork);
-
-        formModel = new ArtworkFormModel
-        {
-            Flow = "Calligraphy"
-        };
-
-        uploadedFile = null;
-        showForm = false;
-
-        return Task.CompletedTask; // ✅ THIS FIXES YOUR ERROR
+        imageUrl = await ArtworkService.SaveImageAsync(uploadedFile);
     }
 
-    private void DeleteArtwork(Guid id)
+    var artwork = new ArtworkItem
     {
-        var item = artworks.FirstOrDefault(x => x.Id == id);
-        if (item is not null)
-        {
-            artworks.Remove(item);
-        }
-    }
+        Id = Guid.NewGuid(),
+        Title = formModel.Title,
+        Size = formModel.Size,
+        Material = formModel.Material,
+        Year = formModel.Year,
+        Description = formModel.Description,
+        Flow = formModel.Flow,
+        Price = formModel.Price,
+        ImageUrl = imageUrl
+    };
+
+    await ArtworkService.AddArtworkAsync(artwork);
+
+    artworks = await ArtworkService.GetArtworksAsync();
+
+    formModel = new ArtworkFormModel
+    {
+        Flow = "Calligraphy"
+    };
+
+    uploadedFile = null;
+    showForm = false;
+}
+
+   private async Task DeleteArtwork(Guid id)
+{
+    await ArtworkService.DeleteArtworkAsync(id);
+
+    artworks = await ArtworkService.GetArtworksAsync();
+}
 }

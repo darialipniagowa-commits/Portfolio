@@ -120,9 +120,6 @@
   <data name="&#xA;About" xml:space="preserve">
     <value>Par mani</value>
   </data>
-  <data name="Gallery" xml:space="preserve">
-    <value>Galerija</value>
-  </data>
   <data name="Projects" xml:space="preserve">
     <value>Projekti</value>
   </data>
@@ -134,5 +131,8 @@
   </data>
   <data name="Exhibitions" xml:space="preserve">
     <value>Izstādes</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Mākslas Galerija</value>
   </data>
 </root>

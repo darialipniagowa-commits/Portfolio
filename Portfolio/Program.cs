@@ -56,7 +56,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
-
+builder.Services.AddScoped<ArtworkService>();
 builder.Services.AddScoped<AdminState>();
 
 var app = builder.Build();

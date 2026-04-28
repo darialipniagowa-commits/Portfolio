@@ -1,21 +1,23 @@
-﻿@page "/admin/artworks"
-@rendermode InteractiveServer
+﻿@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components.Forms
 @using Portfolio.Models
-
+@inject Portfolio.Services.AdminState AdminState
 <div class="gallery-admin-card">
     <h2>Add Artwork</h2>
 
-    <EditForm Model="FormModel" OnValidSubmit="HandleSubmit" FormName="AddArtworkForm">
+    <EditForm Model="FormModel" OnSubmit="HandleSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
+        <!-- IMAGE -->
         <div class="form-group">
             <label>Image</label>
             <InputFile OnChange="HandleImageUpload" />
         </div>
 
+        <!-- GRID -->
         <div class="form-grid">
+
             <div class="form-group">
                 <label>Title</label>
                 <InputText @bind-Value="FormModel.Title" class="form-input" />
@@ -49,34 +51,38 @@
                 <label>Price</label>
                 <InputNumber @bind-Value="FormModel.Price" class="form-input" />
             </div>
+
         </div>
 
+        <!-- DESCRIPTION -->
         <div class="form-group">
             <label>Description (optional)</label>
             <InputTextArea @bind-Value="FormModel.Description" class="form-input" />
         </div>
 
+        <!-- SUBMIT -->
         <button type="submit" class="add-btn">Add Artwork</button>
     </EditForm>
 </div>
 
 @code {
-    [Parameter]
-    public ArtworkFormModel FormModel { get; set; } = new();
+    [Parameter] public ArtworkFormModel FormModel { get; set; } = new();
 
-    [Parameter]
-    public EventCallback<IBrowserFile?> UploadedFileChanged { get; set; }
+    [Parameter] public EventCallback<IBrowserFile?> UploadedFileChanged { get; set; }
 
-    [Parameter]
-    public EventCallback OnSubmit { get; set; }
+    [Parameter] public EventCallback OnSubmit { get; set; }
 
     private async Task HandleImageUpload(InputFileChangeEventArgs e)
     {
-        await UploadedFileChanged.InvokeAsync(e.File);
+        if (UploadedFileChanged.HasDelegate)
+            await UploadedFileChanged.InvokeAsync(e.File);
     }
 
     private async Task HandleSubmit()
     {
-        await OnSubmit.InvokeAsync();
+        Console.WriteLine("Form submitted"); // debug
+
+        if (OnSubmit.HasDelegate)
+            await OnSubmit.InvokeAsync();
     }
 }

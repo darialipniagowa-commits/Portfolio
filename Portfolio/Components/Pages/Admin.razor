@@ -1,5 +1,7 @@
 ﻿@page "/admin"
+@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Authorization
+@inject Portfolio.Services.AdminState AdminState
 @attribute [Authorize(Roles = "Admin")]
 
 <h1>Admin Panel</h1>
@@ -7,6 +9,13 @@
 <p>Welcome, you are logged in as admin.</p>
 
 <ul>
-    <li><a href="/admin/artworks">Manage artworks</a></li>
-    <li><a href="/admin/projects">Manage projects</a></li>
+    <li><a href="/gallery">Manage artworks</a></li>
+    <li><a href="/projects">Manage projects</a></li>
 </ul>
+@code {
+    protected override void OnInitialized()
+    {
+        AdminState.Enable("edit-portfolio-2026");
+    }
+}
+}
