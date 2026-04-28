@@ -7,6 +7,7 @@
 @inject IStringLocalizer<Gallery> L
 @inject Portfolio.Services.AdminState AdminState
 @inject Portfolio.Services.ArtworkService ArtworkService
+@inject Portfolio.Services.PurchaseRequestService PurchaseRequestService
 
 <PageTitle>@L["Title"]</PageTitle>
 
@@ -45,7 +46,8 @@
                         {
                             <GalleryCard Artwork="artwork"
                                          IsAdmin="true"
-                                         OnDelete="DeleteArtwork" />
+                                         OnDelete="DeleteArtwork"
+                                         OnBuy="OpenPurchaseForm" />
                         }
                     </div>
                 }
@@ -59,16 +61,28 @@
                 @if (string.IsNullOrWhiteSpace(selectedFlow))
                 {
                     <div class="public-category-grid">
-                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Calligraphy")'>
-                            <img class="category-switch-image" src="@CalligraphyCategoryImage" alt="@L["Calligraphy"]" />
+                        <button type="button"
+                                class="public-category-card"
+                                @onclick='() => OpenCategory("Calligraphy")'>
+                            <img class="category-switch-image"
+                                 src="@CalligraphyCategoryImage"
+                                 alt="@L["Calligraphy"]" />
                         </button>
 
-                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Xieyi")'>
-                            <img class="category-switch-image" src="@XieyiCategoryImage" alt="@L["Xieyi"]" />
+                        <button type="button"
+                                class="public-category-card"
+                                @onclick='() => OpenCategory("Xieyi")'>
+                            <img class="category-switch-image"
+                                 src="@XieyiCategoryImage"
+                                 alt="@L["Xieyi"]" />
                         </button>
 
-                        <button type="button" class="public-category-card" @onclick='() => OpenCategory("Chinoiserie")'>
-                            <img class="category-switch-image" src="@ChinoiserieCategoryImage" alt="@L["Chinoiserie"]" />
+                        <button type="button"
+                                class="public-category-card"
+                                @onclick='() => OpenCategory("Chinoiserie")'>
+                            <img class="category-switch-image"
+                                 src="@ChinoiserieCategoryImage"
+                                 alt="@L["Chinoiserie"]" />
                         </button>
                     </div>
                 }
@@ -80,7 +94,9 @@
 
                     <div class="public-gallery-view">
                         <div class="public-gallery-header">
-                            <button type="button" class="back-btn" @onclick="BackToCategories">
+                            <button type="button"
+                                    class="back-btn"
+                                    @onclick="BackToCategories">
                                 ← Back
                             </button>
 
@@ -94,7 +110,8 @@
                                 {
                                     <GalleryCard Artwork="artwork"
                                                  IsAdmin="false"
-                                                 OnDelete="DeleteArtwork" />
+                                                 OnDelete="DeleteArtwork"
+                                                 OnBuy="OpenPurchaseForm" />
                                 }
                             </div>
                         }
@@ -108,6 +125,65 @@
 
         </div>
     </div>
+
+    @if (showPurchaseForm && selectedArtwork is not null)
+    {
+        <div class="purchase-modal">
+            <div class="purchase-card">
+
+                <button type="button"
+                        class="purchase-close"
+                        @onclick="ClosePurchaseForm">
+                    ×
+                </button>
+
+                <h2>Purchase request</h2>
+
+                <p class="purchase-artwork-name">@selectedArtwork.Title</p>
+                <p class="purchase-artwork-price">@selectedArtwork.Price €</p>
+
+                <p class="purchase-note">
+                    Shipping is calculated separately after request confirmation.
+                    Payment can be arranged by Revolut or bank transfer.
+                </p>
+
+                <EditForm Model="purchaseRequest" OnSubmit="SubmitPurchaseRequest">
+                    <div class="purchase-form-grid">
+                        <InputText class="form-input" placeholder="Your name" @bind-Value="purchaseRequest.BuyerName" />
+                        <InputText class="form-input" placeholder="Email" @bind-Value="purchaseRequest.Email" />
+
+                        <InputText class="form-input" placeholder="Phone optional" @bind-Value="purchaseRequest.Phone" />
+                        <InputText class="form-input" placeholder="Country" @bind-Value="purchaseRequest.Country" />
+
+                        <InputText class="form-input" placeholder="City" @bind-Value="purchaseRequest.City" />
+                        <InputText class="form-input" placeholder="Postal code" @bind-Value="purchaseRequest.PostalCode" />
+
+                        <InputText class="form-input full-width" placeholder="Full address" @bind-Value="purchaseRequest.Address" />
+
+                        <InputSelect class="form-input full-width" @bind-Value="purchaseRequest.DeliveryPreference">
+                            <option value="Courier">Courier</option>
+                            <option value="Parcel locker">Parcel locker</option>
+                            <option value="Pickup in Riga">Pickup in Riga</option>
+                        </InputSelect>
+
+                        <InputTextArea class="form-input full-width" placeholder="Message" @bind-Value="purchaseRequest.Message" />
+                    </div>
+
+                    <button type="submit" class="save-btn">
+                        Send request
+                    </button>
+                </EditForm>
+
+                @if (purchaseSent)
+                {
+                    <p class="purchase-success">
+                        Thank you. Your request was sent.
+                    </p>
+                }
+
+            </div>
+        </div>
+    }
 </section>
 
 @code {
@@ -116,6 +192,12 @@
     private IBrowserFile? uploadedFile;
 
     private List<ArtworkItem> artworks = new();
+
+    private ArtworkItem? selectedArtwork;
+    private bool showPurchaseForm;
+    private bool purchaseSent;
+
+    private PurchaseRequest purchaseRequest = new();
 
     private ArtworkFormModel formModel = new()
     {
@@ -136,10 +218,12 @@
 
     private string ChinoiserieCategoryImage =>
         IsLv ? "/gallery/lv3.png" : "/gallery/eng3.png";
-        protected override async Task OnInitializedAsync()
-{
-    artworks = await ArtworkService.GetArtworksAsync();
-}
+
+    protected override async Task OnInitializedAsync()
+    {
+        artworks = await ArtworkService.GetArtworksAsync();
+    }
+
     private void ToggleForm()
     {
         showForm = !showForm;
@@ -168,45 +252,81 @@
         uploadedFile = file;
     }
 
-   private async Task AddArtwork()
-{
-    var imageUrl = "/images/placeholder.jpg";
-
-    if (uploadedFile is not null)
+    private async Task AddArtwork()
     {
-        imageUrl = await ArtworkService.SaveImageAsync(uploadedFile);
+        var imageUrl = "/images/placeholder.jpg";
+
+        if (uploadedFile is not null)
+        {
+            imageUrl = await ArtworkService.SaveImageAsync(uploadedFile);
+        }
+
+        var artwork = new ArtworkItem
+        {
+            Id = Guid.NewGuid(),
+            Title = formModel.Title,
+            Size = formModel.Size,
+            Material = formModel.Material,
+            Year = formModel.Year,
+            Description = formModel.Description,
+            Flow = formModel.Flow,
+            Price = formModel.Price,
+            ImageUrl = imageUrl
+        };
+
+        await ArtworkService.AddArtworkAsync(artwork);
+
+        artworks = await ArtworkService.GetArtworksAsync();
+
+        formModel = new ArtworkFormModel
+        {
+            Flow = "Calligraphy"
+        };
+
+        uploadedFile = null;
+        showForm = false;
     }
 
-    var artwork = new ArtworkItem
+    private void OpenPurchaseForm(ArtworkItem artwork)
     {
-        Id = Guid.NewGuid(),
-        Title = formModel.Title,
-        Size = formModel.Size,
-        Material = formModel.Material,
-        Year = formModel.Year,
-        Description = formModel.Description,
-        Flow = formModel.Flow,
-        Price = formModel.Price,
-        ImageUrl = imageUrl
-    };
+        selectedArtwork = artwork;
+        purchaseSent = false;
 
-    await ArtworkService.AddArtworkAsync(artwork);
+        purchaseRequest = new PurchaseRequest
+        {
+            ArtworkId = artwork.Id,
+            ArtworkTitle = artwork.Title,
+            ArtworkPrice = artwork.Price ?? 0,
+            DeliveryPreference = "Courier"
+        };
 
-    artworks = await ArtworkService.GetArtworksAsync();
+        showPurchaseForm = true;
+    }
 
-    formModel = new ArtworkFormModel
+    private void ClosePurchaseForm()
     {
-        Flow = "Calligraphy"
-    };
+        showPurchaseForm = false;
+        selectedArtwork = null;
+        purchaseSent = false;
+    }
+    private async Task SubmitPurchaseRequest()
+    {
+        if (selectedArtwork is null)
+            return;
 
-    uploadedFile = null;
-    showForm = false;
-}
+        purchaseRequest.ArtworkId = selectedArtwork.Id;
+        purchaseRequest.ArtworkTitle = selectedArtwork.Title;
+        purchaseRequest.ArtworkPrice = selectedArtwork.Price ?? 0;
 
-   private async Task DeleteArtwork(Guid id)
-{
-    await ArtworkService.DeleteArtworkAsync(id);
+        await PurchaseRequestService.AddRequestAsync(purchaseRequest);
 
-    artworks = await ArtworkService.GetArtworksAsync();
-}
+        purchaseSent = true;
+    }
+
+    private async Task DeleteArtwork(Guid id)
+    {
+        await ArtworkService.DeleteArtworkAsync(id);
+
+        artworks = await ArtworkService.GetArtworksAsync();
+    }
 }

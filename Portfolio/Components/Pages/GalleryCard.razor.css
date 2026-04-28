@@ -95,3 +95,90 @@
     .delete-x:hover {
         background: #8f2f28;
     }
+.artwork-price-button {
+    background: none;
+    border: none;
+    color: #6F675C;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+    .artwork-price-button:hover {
+        text-decoration: underline;
+    }
+
+/* SOLD STYLE */
+.artwork-sold {
+    font-size: 1rem;
+    color: #b7473c;
+    font-weight: 500;
+    opacity: 0.8;
+}
+/* ===== PURCHASE MODAL ===== */
+
+.purchase-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 31, 31, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+}
+
+.purchase-card {
+    position: relative;
+    width: min(520px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #f5f3ee;
+    border: 1px solid rgba(122, 157, 140, 0.35);
+    border-radius: 22px;
+    padding: 2rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+}
+
+.purchase-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: #b7473c;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.purchase-card h2 {
+    margin: 0 0 0.75rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.purchase-artwork-name,
+.purchase-artwork-price {
+    text-align: center;
+    margin: 0.25rem 0;
+}
+
+.purchase-note {
+    margin: 1rem 0;
+    color: #6F675C;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.purchase-card .form-input {
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.purchase-success {
+    margin-top: 1rem;
+    text-align: center;
+    color: #4F6B5C;
+}

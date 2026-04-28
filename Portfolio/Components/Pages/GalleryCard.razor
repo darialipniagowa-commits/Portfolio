@@ -1,32 +1,6 @@
 ﻿@using Portfolio.Models
 
-<div class="artwork-card">
-    <div class="artwork-image-wrap">
-        <img class="artwork-image"
-             src="@Artwork.ImageUrl"
-             alt="@Artwork.Title" />
-
-        <div class="artwork-hover">
-            <p>@Artwork.Size</p>
-            <p>@Artwork.Year</p>
-            <p>@Artwork.Material</p>
-
-            @if (!string.IsNullOrWhiteSpace(Artwork.Description))
-            {
-                <p>@Artwork.Description</p>
-            }
-        </div>
-    </div>
-    </div>
-
-    <div class="artwork-bottom">
-        <span class="artwork-title">@Artwork.Title</span>
-
-        @if (Artwork.Price > 0)
-        {
-            <span class="artwork-price">@Artwork.Price €</span>
-        }
-    </div>
+<div class="artwork-card @(Artwork.IsSold ? "sold" : "")">
     <div class="artwork-image-wrap">
         <img class="artwork-image"
              src="@Artwork.ImageUrl"
@@ -40,23 +14,55 @@
                 ×
             </button>
         }
-        @if (IsAdmin)
+
+        <div class="artwork-hover">
+            <p>@Artwork.Size</p>
+            <p>@Artwork.Year</p>
+            <p>@Artwork.Material</p>
+
+            @if (!string.IsNullOrWhiteSpace(Artwork.Description))
+            {
+                <p>@Artwork.Description</p>
+            }
+        </div>
+    </div>
+
+    <div class="artwork-bottom">
+        <span class="artwork-title">@Artwork.Title</span>
+
+        @if (Artwork.IsSold)
+        {
+            <span class="artwork-sold">Sold</span>
+        }
+        else if (Artwork.Price > 0)
         {
             <button type="button"
-                    class="delete-btn"
-                    @onclick="Delete">
-                Delete
+                    class="artwork-price-button"
+                    @onclick="Buy">
+                @Artwork.Price €
             </button>
         }
     </div>
+</div>
 
 @code {
     [Parameter] public ArtworkItem Artwork { get; set; } = new();
+
     [Parameter] public bool IsAdmin { get; set; }
+
     [Parameter] public EventCallback<Guid> OnDelete { get; set; }
+
+    [Parameter] public EventCallback<ArtworkItem> OnBuy { get; set; }
 
     private async Task Delete()
     {
-        await OnDelete.InvokeAsync(Artwork.Id);
+        if (OnDelete.HasDelegate)
+            await OnDelete.InvokeAsync(Artwork.Id);
+    }
+
+    private async Task Buy()
+    {
+        if (!Artwork.IsSold && OnBuy.HasDelegate)
+            await OnBuy.InvokeAsync(Artwork);
     }
 }

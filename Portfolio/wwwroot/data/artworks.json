@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "Id": "b289d04a-f50e-4cf8-8d06-72501eb8ad75",
+    "Title": "test",
+    "Size": "3434",
+    "Material": "test",
+    "Year": 3453,
+    "Description": null,
+    "Flow": "Calligraphy",
+    "ImageUrl": "/gallery/uploads/92eb3f2b-0204-46a4-824b-2f3e8f9d1b13.png",
+    "Price": 345435,
+    "IsSold": false
+  }
+]
