@@ -1,32 +1,35 @@
 ﻿@page "/"
 @page "/about"
 @rendermode InteractiveServer
+
 @using Microsoft.Extensions.Localization
 @using Microsoft.AspNetCore.Components.Authorization
+
 @inject IStringLocalizer<About> L
 @inject NavigationManager Navigation
 
 <PageTitle>@L["Title"]</PageTitle>
 
-<section class="about-section">
-    <div class="about-container">
-        <div class="about-image">
-            <div>
-                <div class="about-image-frame">
-                    <img src="/images/profile.jpg" alt="Darja Lipņagova" />
-                </div>
+<section class="about-page">
+    <img class="about-bg-lotus" src="/about/lotus-plant.png" alt="" />
+    <img class="about-bg-birds" src="/about/birds.png" alt="" />
 
-                <div class="about-decor-panel">
-                    <p class="about-decor-text">Calligraphy · Xieyi · Chinoiserie</p>
-                </div>
+    <header class="about-header">
+        <img class="about-title-img" src="@HeaderImage" alt="@L["Title"]" />
+    </header>
+
+    <div class="about-container">
+        <aside class="about-vertical-tag">
+            <img src="/about/vertical-tag.png" alt="" />
+        </aside>
+        <div class="about-image-wrap">
+            <div class="about-photo-frame">
+                <img class="about-photo" src="/images/profile.jpg" alt="Darja Lipņagova" />
+                <img class="about-frame-overlay" src="/about/photo-frame.png" alt="" />
             </div>
         </div>
 
-        <div class="about-text">
-            <div class="about-heading">
-                <h1 class="about-title">@L["Title"]</h1>
-            </div>
-
+        <article class="about-content">
             <p>@L["Paragraph1"]</p>
             <p>@L["Paragraph2"]</p>
             <p>@L["Paragraph3"]</p>
@@ -34,70 +37,67 @@
             <p>@L["Paragraph5"]</p>
             <p>@L["Paragraph6"]</p>
 
-            <div class="about-footer">
-                <div class="about-links">
-                    <a class="social-icon"
-                           href="https://www.instagram.com/dariustilius/"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           aria-label="Instagram">
-                        <i class="fa-brands fa-instagram"></i>
-                    </a>
+          
 
-                    <a class="social-icon"
-                           href="https://github.com/darialipniagowa"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           aria-label="GitHub">
-                        <i class="fa-brands fa-github"></i>
-                    </a>
 
-                    <a class="social-icon"
-                           href="https://www.linkedin.com/in/daria-lipniagowa-4616a8122/"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           aria-label="LinkedIn">
-                        <i class="fa-brands fa-linkedin-in"></i>
-                    </a>
-                </div>
-
-                <div class="about-admin-tools">
-                    <AuthorizeView>
-                        <Authorized>
-                            <button type="button" class="admin-icon-btn" @onclick="GoToAdmin" title="Admin" aria-label="Admin">
-                                🔓
-                            </button>
-
-                            <button type="button" class="admin-icon-btn" @onclick="Logout" title="Logout" aria-label="Logout">
-                                🚪
-                            </button>
-                        </Authorized>
-
-                        <NotAuthorized>
-                            <button type="button" class="admin-icon-btn" @onclick="GoToLogin" title="Login" aria-label="Login">
-                                🔒
-                            </button>
-                        </NotAuthorized>
-                    </AuthorizeView>
-                </div>
-            </div>
-        </div>
+        
+        </article>
     </div>
 </section>
 
+<footer class="site-footer">
+    <div class="footer-inner">
+
+        <div class="footer-quote">
+            <p class="quote-main">@L["Paragraph7"]</p>
+            <p class="quote-translation">@L["Paragraph8"]</p>
+            <span class="quote-author">@L["Paragraph9"]</span>
+        </div>
+
+        <span class="footer-vline"></span>
+
+        <div class="footer-icons">
+            <a href="https://www.instagram.com/dariustilius/" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://github.com/darialipniagowa" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/daria-lipniagowa-4616a8122/" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+        </div>
+
+        <span class="footer-vline"></span>
+
+        <div class="footer-copy">
+            © 2026 Darja Lipņagova<br />
+            All rights reserved
+        </div>
+
+        <div class="footer-admin">
+            <AuthorizeView>
+                <Authorized>
+                    <button type="button" class="admin-icon-btn" @onclick="GoToAdmin">🔓</button>
+                    <button type="button" class="admin-icon-btn" @onclick="Logout">🚪</button>
+                </Authorized>
+                <NotAuthorized>
+                    <button type="button" class="admin-icon-btn" @onclick="GoToLogin">🔒</button>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <img class="footer-lotus" src="/about/lotus-footer.png" alt="" />
+    </div>
+</footer>
+
 @code {
-    private void GoToLogin()
-    {
-        Navigation.NavigateTo("/account/login", forceLoad: true);
-    }
+    private string HeaderImage =>
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv"
+            ? "/about/parmani.png"
+            : "/about/aboutme.png";
 
-    private void GoToAdmin()
-    {
-        Navigation.NavigateTo("/admin", forceLoad: true);
-    }
-
-    private void Logout()
-    {
-        Navigation.NavigateTo("/account/logout", forceLoad: true);
-    }
+    private void GoToLogin() => Navigation.NavigateTo("/account/login", true);
+    private void GoToAdmin() => Navigation.NavigateTo("/admin", true);
+    private void Logout() => Navigation.NavigateTo("/account/logout", true);
 }

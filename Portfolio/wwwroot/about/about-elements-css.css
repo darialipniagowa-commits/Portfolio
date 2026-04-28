@@ -1,0 +1,30 @@
+/* Copy images to wwwroot/images/about-elements/ */
+.about-page-art {
+  background-image: url('/images/about-elements/paper-background.png');
+  background-size: cover;
+  background-repeat: repeat;
+}
+.about-title-image {
+  display: block;
+  width: min(430px, 80vw);
+  margin: 0 auto 2rem;
+}
+.about-decor-lotus {
+  position: absolute;
+  right: 3rem;
+  bottom: 4rem;
+  width: 300px;
+  opacity: .75;
+  pointer-events: none;
+}
+.about-birds {
+  position: absolute;
+  right: 10rem;
+  top: 8rem;
+  width: 180px;
+  opacity: .75;
+  pointer-events: none;
+}
+.about-vertical-img {
+  width: 150px;
+}

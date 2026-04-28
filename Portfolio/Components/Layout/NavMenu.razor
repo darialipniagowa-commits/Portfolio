@@ -1,33 +1,40 @@
 ﻿@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<NavMenu> L
-@inject NavigationManager NavigationManager
-@implements IDisposable
+@using Microsoft.AspNetCore.Components.Routing
 
-<nav class="site-nav">
-    <NavLink href="/about">@L["About"]</NavLink>
-    <NavLink href="/gallery">@L["Gallery"]</NavLink>
-    <NavLink href="/projects">@L["Projects"]</NavLink>
-    <NavLink href="/shop">@L["Shop"]</NavLink>
-    <NavLink href="/contact">@L["Contact"]</NavLink>
-</nav>
+@inject IStringLocalizer<NavMenu> L
+@inject NavigationManager Navigation
+
+<header class="top-bar">
+    <a href="/" class="site-seal-link" aria-label="Home">
+        <img src="/about/logonav.png" alt="" class="site-seal-img" />
+    </a>
+
+    <nav class="site-nav" aria-label="Main navigation">
+        <NavLink href="/about" Match="NavLinkMatch.All">@L["About"]</NavLink>
+        <NavLink href="/gallery">@L["Gallery"]</NavLink>
+        <NavLink href="/projects">@L["Projects"]</NavLink>
+        <NavLink href="/exhibitions">@L["Exhibitions"]</NavLink>
+        <NavLink href="/shop">@L["Shop"]</NavLink>
+        <NavLink href="/contact">@L["Contact"]</NavLink>
+    </nav>
+
+    <div class="lang-switch">
+        <a href="@CultureUrl("lv")">LV</a>
+        <span>|</span>
+        <a href="@CultureUrl("en")">EN</a>
+    </div>
+</header>
 
 @code {
-    private string? currentUrl;
-
-    protected override void OnInitialized()
+    private string CultureUrl(string culture)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
+        var path = Navigation.ToBaseRelativePath(Navigation.Uri);
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        InvokeAsync(StateHasChanged);
-    }
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            path = "about";
+        }
 
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
+        return $"/set-culture/{culture}?returnUrl=/{path}";
     }
 }
