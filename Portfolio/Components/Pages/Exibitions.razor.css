@@ -1,192 +1,186 @@
-﻿.exhibitions-floating-page {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 4rem 2rem 8rem;
+﻿/* ================================
+   EXHIBITIONS PAGE
+================================ */
+
+.exhibitions-floating-page {
     min-height: 100vh;
-    background: #F5F3EE;
-    color: #2F2F2F;
+    padding: 0;
+    background: url("/images/exhibitions/background.png") center center / cover no-repeat, #f4efe4;
+    color: #1f1f1f;
+    font-family: Georgia, "Times New Roman", serif;
 }
 
-.page-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
-
-.page-kicker {
-    margin: 0 0 0.8rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: #6E6A63;
-}
-
-.page-title {
-    margin: 0;
-    font-family: 'Noto Serif SC', serif;
-    font-size: clamp(2.4rem, 5vw, 4.4rem);
-    font-weight: 500;
-    letter-spacing: 0.02em;
-}
-
-.floating-exhibitions {
+.exhibitions-museum-wall {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 5rem;
     position: relative;
-    min-height: 1500px;
-}
-
-/* Base card */
-.floating-card {
-    position: absolute;
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-}
-
-.floating-image-wrap {
     background: transparent;
 }
 
-.floating-image {
-    width: 100%;
-    display: block;
-    object-fit: cover;
-    box-shadow: 0 12px 28px rgba(58, 58, 58, 0.08);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+/* ================================
+   HEADER
+================================ */
+
+.exhibition-header {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    margin: 0 auto 1.4rem;
 }
 
-.floating-card:hover .floating-image {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 38px rgba(58, 58, 58, 0.12);
+.exhibition-title-img {
+    display: block;
+    width: 360px;
+    max-width: 72%;
+    margin: 0 auto 0.15rem;
+}
+
+
+/* ================================
+   POSTERS GRID
+================================ */
+
+.floating-exhibitions {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 780px;
+    margin: -0.5rem auto 0;
+}
+
+.floating-card {
+    padding: 0.45rem;
+    background: rgba(251, 247, 238, 0.92);
+    border: 1px solid #d8cdbc;
+    box-shadow: 0 14px 28px rgba(31, 31, 31, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .floating-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 34px rgba(31, 31, 31, 0.22);
+    }
+
+.card-2 {
+    transform: translateY(-6px);
+}
+
+    .card-2:hover {
+        transform: translateY(-10px);
+    }
+
+.card-4,
+.card-5,
+.card-6 {
+    margin-top: 1.5rem;
+}
+
+.floating-image-wrap {
+    aspect-ratio: 3 / 4;
+    background: #f4efe4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.floating-image {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
 }
 
 .floating-text {
-    max-width: 95%;
+    display: none;
 }
 
-.floating-year {
-    margin-bottom: 0.4rem;
-    font-size: 0.76rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: #7C756B;
-}
+/* ================================
+   MOBILE
+================================ */
 
-.floating-title {
-    margin: 0;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 1.2rem;
-    line-height: 1.25;
-    font-weight: 500;
-    color: #2F2F2F;
-}
-
-.floating-location {
-    margin: 0.45rem 0 0;
-    font-size: 0.92rem;
-    line-height: 1.5;
-    color: #6B655D;
-}
-
-/* Individual placement */
-.card-1 {
-    top: 2rem;
-    left: 4%;
-    width: 250px;
-}
-
-.card-2 {
-    top: 8rem;
-    right: 10%;
-    width: 310px;
-}
-
-.card-3 {
-    top: 34rem;
-    left: 18%;
-    width: 280px;
-}
-
-.card-4 {
-    top: 29rem;
-    right: 26%;
-    width: 230px;
-}
-
-.card-5 {
-    top: 66rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 290px;
-}
-
-    /* Subtle variation */
-    .card-2 .floating-image,
-    .card-5 .floating-image {
-        aspect-ratio: 4 / 5;
-    }
-
-.card-1 .floating-image,
-.card-3 .floating-image,
-.card-4 .floating-image {
-    aspect-ratio: 3 / 4;
-}
-
-/* Tablet */
-@media (max-width: 1100px) {
-    .floating-exhibitions {
-        min-height: 1350px;
-    }
-
-    .card-1 {
-        left: 2%;
-    }
-
-    .card-2 {
-        right: 3%;
-    }
-
-    .card-3 {
-        left: 10%;
-    }
-
-    .card-4 {
-        right: 14%;
-    }
-}
-
-/* Mobile: switch to vertical flow */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .exhibitions-floating-page {
-        padding: 3rem 1.2rem 5rem;
+        padding: 2rem 1rem;
+        background-position: center top;
     }
 
-    .page-header {
-        margin-bottom: 2.5rem;
+    .exhibitions-museum-wall {
+        padding: 2rem 1rem 4rem;
     }
+
+    .exhibition-header {
+        margin-bottom: 2rem;
+    }
+
+    .exhibition-title-img {
+        width: 320px;
+        max-width: 82%;
+    }
+
+    .exhibition-divider {
+        margin-bottom: 1.4rem;
+    }
+
+        .exhibition-divider span {
+            width: 210px;
+        }
 
     .floating-exhibitions {
-        position: static;
-        min-height: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 2.5rem;
+        grid-template-columns: 1fr;
+        max-width: 320px;
+        margin: 0 auto;
+        gap: 1.6rem;
     }
 
-    .floating-card {
-        position: static;
-        width: 100%;
-        transform: none !important;
+    .floating-card,
+    .floating-card:hover,
+    .card-2,
+    .card-2:hover {
+        transform: none;
+    }
+
+    .card-4,
+    .card-5,
+    .card-6 {
+        margin-top: 0;
+    }
+
+    .floating-image-wrap {
+        aspect-ratio: 3 / 4;
     }
 
     .floating-text {
-        max-width: 100%;
+        display: block;
+        padding: 0.85rem 0.45rem;
+        text-align: center;
+    }
+
+    .floating-year {
+        margin-bottom: 0.3rem;
+        color: #b7473c;
+        font-size: 0.85rem;
+        letter-spacing: 0.14em;
     }
 
     .floating-title {
+        margin: 0;
         font-size: 1.1rem;
+        font-weight: 500;
+        line-height: 1.3;
     }
 
-    .floating-image {
-        width: 100%;
+    .floating-location {
+        margin-top: 0.5rem;
+        color: #6f675c;
+        font-size: 0.9rem;
+        line-height: 1.45;
     }
 }

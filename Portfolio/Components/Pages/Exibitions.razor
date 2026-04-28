@@ -1,79 +1,61 @@
 ﻿@page "/exhibitions"
-@using Portfolio.Models
-@inject NavigationManager Nav
+@rendermode InteractiveServer
 
-<PageTitle>Izstādes</PageTitle>
+@using Portfolio.Models
+@using Microsoft.Extensions.Localization
+
+@inject IStringLocalizer<About> L
+
+<PageTitle>Izstādes / Exhibitions</PageTitle>
 
 <section class="exhibitions-floating-page">
-    <div class="page-header">
-   
-        <h1 class="page-title">Izstādes</h1>
-    </div>
+    <div class="exhibitions-museum-wall">
 
-    <div class="floating-exhibitions">
-        @foreach (var item in Exhibitions.Select((value, index) => new { value, index }))
-        {
-            <article class="floating-card card-@(item.index + 1)">
-                <div class="floating-image-wrap">
-                    <img src="@item.value.ImageUrl" alt="@item.value.Title" class="floating-image" />
-                </div>
+        <header class="exhibition-header">
+            <img class="exhibition-title-img"
+                 src="@HeaderImage"
+                 alt="Izstādes / Exhibitions" />
 
-                <div class="floating-text">
-                    <div class="floating-year">@item.value.Year</div>
-                    <h2 class="floating-title">@item.value.Title</h2>
-                    <p class="floating-location">@item.value.Location</p>
-                </div>
-            </article>
-        }
+            <div class="about-divider exhibition-divider">
+                <span></span>
+            </div>
+        </header>
+
+        <div class="floating-exhibitions">
+            @foreach (var item in Exhibitions.Select((value, index) => new { value, index }))
+            {
+                <article class="floating-card card-@(item.index + 1)">
+                    <div class="floating-image-wrap">
+                        <img src="@item.value.ImageUrl"
+                             alt="@item.value.Title"
+                             class="floating-image" />
+                    </div>
+
+                    <div class="floating-text">
+                        <div class="floating-year">@item.value.Year</div>
+                        <h2 class="floating-title">@item.value.Title</h2>
+                        <p class="floating-location">@item.value.Location</p>
+                    </div>
+                </article>
+            }
+        </div>
+
     </div>
 </section>
 
 @code {
-   
+    private string HeaderImage =>
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv"
+            ? "/images/exhibitions/izst.png"
+            : "/images/exhibitions/exib.png";
 
     private List<ExhibitionItem> Exhibitions = new()
     {
-        new()
-        {
-            Year = "2026",
-            Title = "Spārni, kas nes pavasari",
-            Location = "grupu izstāde RCB “Vidzeme”",
-            ImageUrl = "images/gallery/exhibitions/sparni.jpg"
-        },
-        new()
-        {
-            Year = "2026",
-            Title = "Art Riga Fair Paper festivāls",
-            Location = "grupu izstāde",
-            ImageUrl = "images/gallery/exhibitions/rigart.jpg"
-        },
-          new()
-        {
-            Year = "2025",
-            Title = "Simts svētības augļu",
-            Location = "grupu izstāde",
-            ImageUrl = "images/gallery/exhibitions/gudriba.jpg"
-        },
-        new()
-        {
-            Year = "2025",
-            Title = "Čendu, ASEAN",
-            Location = "organizācija un dalība grupu izstādē Ķīnā",
-            ImageUrl = "images/gallery/exhibitions/cendu.jpg"
-        },
-        new()
-        {
-            Year = "2025",
-            Title = "Tūkstošzimju gudrība",
-            Location = "BiArt galerija",
-            ImageUrl = "images/gallery/exhibitions/tukstoss.jpg"
-        },
-        new()
-        {
-            Year = "2024",
-            Title = "Padebešu ziedu vējš",
-            Location = "grupu izstāde LU Botāniskajā dārzā",
-            ImageUrl = "images/gallery/exhibitions/padebesuziedi.jpg"
-        }
+        new() { Year = "2026", Title = "Spārni, kas nes pavasari", Location = "grupu izstāde RCB “Vidzeme”", ImageUrl = "/images/gallery/exhibitions/sparni.jpg" },
+        new() { Year = "2026", Title = "Art Riga Fair Paper festivāls", Location = "grupu izstāde", ImageUrl = "/images/gallery/exhibitions/rigart.jpg" },
+        new() { Year = "2025", Title = "Simts svētības augļu", Location = "grupu izstāde", ImageUrl = "/images/gallery/exhibitions/gudriba.jpg" },
+        new() { Year = "2025", Title = "Čendu, ASEAN", Location = "organizācija un dalība grupu izstādē Ķīnā", ImageUrl = "/images/gallery/exhibitions/cendu.jpg" },
+        new() { Year = "2025", Title = "Tūkstošzimju gudrība", Location = "BiArt galerija", ImageUrl = "/images/gallery/exhibitions/tukstoss.jpg" },
+        new() { Year = "2024", Title = "Padebešu ziedu vējš", Location = "grupu izstāde LU Botāniskajā dārzā", ImageUrl = "/images/gallery/exhibitions/padebesuziedi.jpg" }
     };
 }
