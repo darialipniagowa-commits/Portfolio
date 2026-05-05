@@ -4,22 +4,21 @@
 @using Portfolio.Models
 @using Microsoft.AspNetCore.Components.Forms
 @inject Portfolio.Services.AdminState AdminState
+@inject Portfolio.Services.PortfolioProjectService ProjectService
 
-<PageTitle>Digital Portfolio</PageTitle>
+<PageTitle>@PortfolioTitle</PageTitle>
 
 <section class="portfolio-page">
     <div class="portfolio-container">
-        <header class="portfolio-header">
-            <h1 class="portfolio-title">@PortfolioTitle</h1>
 
-            <div class="portfolio-divider-row">
-                <div class="line"></div>
-                <div class="circle"></div>
-                <div class="line"></div>
+        <!-- HEADER -->
+        <div class="portfolio-header">
+            <img class="portfolio-header-img"
+                 src="@HeaderImage"
+                 alt="@PortfolioTitle" />
+        </div>
 
-                <div class="seal">印</div>
-            </div>
-        </header>
+        <!-- ADMIN BUTTON -->
         @if (AdminState.IsAdmin)
         {
             <div class="portfolio-admin-actions">
@@ -29,107 +28,141 @@
             </div>
         }
 
+        <!-- ADMIN FORM -->
         @if (AdminState.IsAdmin && showForm)
         {
-            <div class="admin-panel">
+            <div class="project-admin-panel">
+                <h2>Add Project</h2>
+
                 <EditForm Model="@formModel" OnValidSubmit="AddProject">
-                    <div class="form-grid">
+                    <div class="project-form-grid">
 
-                        <div class="form-field">
+                        <div class="project-form-field">
                             <label>Name</label>
-                            <InputText @bind-Value="formModel.Name" class="form-input" />
+                            <InputText @bind-Value="formModel.Name" />
                         </div>
 
-                        <div class="form-field">
+                        <div class="project-form-field">
                             <label>Year</label>
-                            <InputText @bind-Value="formModel.Year" class="form-input" />
+                            <InputText @bind-Value="formModel.Year" />
                         </div>
 
-                        <div class="form-field full-width">
-                            <label>Demo Image URL</label>
-                            <InputText @bind-Value="formModel.DemoUrl" class="form-input" />
+                        <div class="project-form-field full">
+                            <label>Preview Image URL</label>
+                            <InputText @bind-Value="formModel.ImageUrl" />
                         </div>
 
-                        <div class="form-field full-width">
+                        <div class="project-form-field full">
+                            <label>Demo GIF URL</label>
+                            <InputText @bind-Value="formModel.DemoUrl" />
+                        </div>
+
+                        <div class="project-form-field full">
                             <label>GitHub URL</label>
-                            <InputText @bind-Value="formModel.GitHubUrl" class="form-input" />
+                            <InputText @bind-Value="formModel.GitHubUrl" />
                         </div>
 
-                        <div class="form-field full-width">
+                        <div class="project-form-field full">
                             <label>Idea</label>
-                            <InputTextArea @bind-Value="formModel.Idea" class="form-input textarea" />
+                            <InputTextArea @bind-Value="formModel.Idea" />
                         </div>
 
-                        <div class="form-field full-width">
+                        <div class="project-form-field full">
                             <label>Structure</label>
-                            <InputTextArea @bind-Value="formModel.Structure" class="form-input textarea" />
+                            <InputTextArea @bind-Value="formModel.Structure" />
                         </div>
 
                     </div>
 
-                    <button class="save-btn" type="submit">Save Project</button>
+                    <div class="project-admin-buttons">
+                        <button class="save-project-btn" type="submit">Save Project</button>
+                        <button class="cancel-project-btn" type="button" @onclick="ToggleForm">Cancel</button>
+                    </div>
                 </EditForm>
             </div>
         }
 
+        <!-- PROJECT LIST (VISIBLE TO PUBLIC) -->
         @if (projects.Any())
         {
-            <div class="projects-grid">
+            <div class="projects-list">
                 @foreach (var project in projects)
                 {
-                    <div class="project-card">
+                    <article class="project-card">
+
                         @if (AdminState.IsAdmin)
                         {
-                            <button class="delete-btn" @onclick="() => DeleteProject(project.Id)">×</button>
+                            <button class="delete-btn"
+                                    type="button"
+                                    @onclick="() => DeleteProject(project.Id)">
+                                ×
+                            </button>
                         }
 
-                        <div class="project-head">
-                            <p class="project-year">@project.Year</p>
+                        <header class="project-head">
+                            @if (!string.IsNullOrWhiteSpace(project.Year))
+                            {
+                                <p class="project-year">@project.Year</p>
+                            }
+
                             <h2 class="project-name">@project.Name</h2>
-                        </div>
+                        </header>
+
+                        <div class="project-line"></div>
 
                         <div class="project-main">
-                            <div class="project-demo-side">
-                                <div class="demo-box">
-                                    @if (openedDemoId == project.Id && !string.IsNullOrWhiteSpace(project.DemoUrl))
-                                    {
-                                        <img src="@project.DemoUrl" alt="@($"{project.Name} demo")" />
-                                    }
-                                    else
-                                    {
-                                        <div class="demo-placeholder">Demo preview</div>
-                                    }
-                                </div>
+
+                            <!-- IMAGE / GIF -->
+                            <div class="project-image-box">
+                                @if (openedDemoId == project.Id && !string.IsNullOrWhiteSpace(project.DemoUrl))
+                                {
+                                    <img src="@project.DemoUrl" alt="@($"{project.Name} demo")" />
+                                }
+                                else if (!string.IsNullOrWhiteSpace(project.ImageUrl))
+                                {
+                                    <img src="@project.ImageUrl" alt="@project.Name" />
+                                }
+                                else
+                                {
+                                    <div class="demo-placeholder">Demo preview</div>
+                                }
                             </div>
 
+                            <!-- TEXT -->
                             <div class="project-text-side">
                                 <div class="text-block">
                                     <h4>Idea</h4>
                                     <p>@project.Idea</p>
                                 </div>
 
-                                <div class="text-divider"></div>
-
                                 <div class="text-block">
                                     <h4>Structure</h4>
                                     <p>@project.Structure</p>
                                 </div>
                             </div>
+
                         </div>
 
-                        <div class="project-footer">
-                            <button class="demo-btn" @onclick="() => ToggleDemo(project.Id)">
-                                Demo
+                        <!-- FOOTER -->
+                        <footer class="project-footer">
+                            <button class="demo-btn"
+                                    type="button"
+                                    @onclick="() => ToggleDemo(project.Id)">
+                                @(openedDemoId == project.Id ? "Back" : "Demo")
                             </button>
 
                             @if (!string.IsNullOrWhiteSpace(project.GitHubUrl))
                             {
-                                <a class="github-link" href="@project.GitHubUrl" target="_blank" rel="noopener noreferrer">
+                                <a class="github-link"
+                                       href="@project.GitHubUrl"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
                                     GitHub
                                 </a>
                             }
-                        </div>
-                    </div>
+                        </footer>
+
+                    </article>
                 }
             </div>
         }
@@ -145,7 +178,8 @@
     private Guid? openedDemoId;
     private bool showForm;
 
-    private List<PortfolioItem> projects = new();
+    // 🔥 IMPORTANT: shared data
+    private List<PortfolioItem> projects => ProjectService.Projects;
 
     private PortfolioItem formModel = new()
     {
@@ -160,7 +194,8 @@
     private void AddProject()
     {
         formModel.Id = Guid.NewGuid();
-        projects.Add(formModel);
+
+        ProjectService.Add(formModel);
 
         formModel = new PortfolioItem
         {
@@ -177,22 +212,19 @@
 
     private void DeleteProject(Guid id)
     {
-        var item = projects.FirstOrDefault(x => x.Id == id);
+        ProjectService.Delete(id);
 
-        if (item is not null)
-        {
-            projects.Remove(item);
-
-            if (openedDemoId == id)
-                openedDemoId = null;
-        }
+        if (openedDemoId == id)
+            openedDemoId = null;
     }
+
     private string PortfolioTitle =>
-    System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv"
-        ? "Digitālais Portfolio"
-        : "Digital Portfolio";
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv"
+            ? "Digitālais Portfolio"
+            : "Digital Portfolio";
+
     private string HeaderImage =>
         System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "lv"
-            ? "/dproject/dphlv.png"
-            : "/dproject/dphen.png";
+            ? "/dproject/dplv.png"
+            : "/dproject/dpeng.png";
 }

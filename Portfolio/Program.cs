@@ -58,7 +58,7 @@ builder.Services.AddIdentityCore<IdentityUser>(options =>
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<ArtworkService>();
 builder.Services.AddScoped<AdminState>();
-
+builder.Services.AddSingleton<Portfolio.Services.PortfolioProjectService>();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

@@ -1,0 +1,62 @@
+﻿@using Portfolio.Models
+
+<article class="project-card">
+
+    <div class="project-row">
+
+        <div class="project-image">
+            @if (!string.IsNullOrWhiteSpace(CurrentImage))
+            {
+                <img src="@CurrentImage" alt="@Project.Name" />
+            }
+            else
+            {
+                <div class="placeholder">No image</div>
+            }
+        </div>
+
+        <div class="project-content">
+            <h3>@(Project.Name ?? "Untitled")</h3>
+
+            <h4>Project Idea</h4>
+            <p>@Project.Idea</p>
+
+            <h4>Project Structure</h4>
+            <p>@Project.Structure</p>
+        </div>
+
+    </div>
+
+    <div class="project-footer">
+        <button class="demo-btn" type="button" @onclick="ToggleDemo">
+            @(showDemo ? "Back" : "Demo")
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace(Project.GitHubUrl))
+        {
+            <a class="github-link"
+                   href="@Project.GitHubUrl"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                GitHub
+            </a>
+        }
+    </div>
+
+</article>
+
+@code {
+    [Parameter] public Project Project { get; set; } = default!;
+
+    private bool showDemo;
+
+    private string CurrentImage =>
+        showDemo && !string.IsNullOrWhiteSpace(Project.DemoUrl)
+            ? Project.DemoUrl!
+            : Project.ImageUrl ?? "";
+
+    private void ToggleDemo()
+    {
+        showDemo = !showDemo;
+    }
+}

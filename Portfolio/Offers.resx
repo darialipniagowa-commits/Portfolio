@@ -117,19 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&#xA;About" xml:space="preserve">
-    <value>Par mani</value>
+  <data name="String1" xml:space="preserve">
+    <value />
   </data>
-  <data name="Projects" xml:space="preserve">
-    <value>Projekti</value>
+  <data name="String2" xml:space="preserve">
+    <value />
   </data>
-  <data name="Offers &amp; Contacts" xml:space="preserve">
-    <value>Piedāvajumi un Kontakti</value>
+  <data name="String3" xml:space="preserve">
+    <value />
   </data>
-  <data name="Exhibitions" xml:space="preserve">
-    <value>Izstādes</value>
-  </data>
-  <data name="Gallery" xml:space="preserve">
-    <value>Mākslas Galerija</value>
+  <data name="String4" xml:space="preserve">
+    <value />
   </data>
 </root>

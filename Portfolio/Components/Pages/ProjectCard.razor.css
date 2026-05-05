@@ -1,0 +1,125 @@
+﻿.project-card {
+    width: min(720px, calc(100% - 2rem));
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 16px;
+    background: rgba(251, 247, 238, 0.96);
+    border: 2px solid #213b31;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+    transition: 0.25s ease;
+}
+
+    .project-card:hover {
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+    }
+
+/* layout */
+.project-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1rem;
+}
+
+/* image */
+.project-image {
+    width: 220px;
+    height: 220px;
+    border-radius: 14px;
+    border: 2px solid #213b31;
+    background: rgba(244, 239, 228, 0.8);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.placeholder {
+    color: #6f675c;
+}
+
+/* content */
+.project-content {
+    padding: 1rem;
+    border-radius: 14px;
+    border: 2px solid #213b31;
+    background: rgba(255, 252, 244, 0.9);
+}
+
+    .project-content h3 {
+        margin: 0 0 0.8rem;
+        color: #213b31;
+        font-size: 1.4rem;
+    }
+
+    .project-content h4 {
+        margin: 0.8rem 0 0.25rem;
+        color: #b7473c;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .project-content p {
+        margin: 0;
+        color: #3a342d;
+        line-height: 1.5;
+    }
+
+/* footer */
+.project-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+}
+
+/* buttons */
+.demo-btn,
+.github-link {
+    min-width: 110px;
+    min-height: 38px;
+    border-radius: 999px;
+    border: 2px solid #213b31;
+    background: rgba(244, 239, 228, 0.95);
+    color: #213b31;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .demo-btn:hover,
+    .github-link:hover {
+        background: #213b31;
+        color: #fff;
+    }
+
+/* github icon */
+.git-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background: url('/icons/github.svg') center / contain no-repeat;
+}
+
+.github-link:hover .git-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* mobile */
+@media (max-width: 650px) {
+    .project-row {
+        grid-template-columns: 1fr;
+    }
+
+    .project-image {
+        width: 100%;
+        height: 240px;
+    }
+}

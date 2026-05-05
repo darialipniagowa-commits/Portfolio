@@ -1,0 +1,81 @@
+﻿@page "/offers"
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Offers> L
+
+<PageTitle>@L["PageTitle"]</PageTitle>
+
+<section class="offers-page">
+    <div class="offers-container">
+
+        <header class="offers-header">
+            <h1>@L["HeaderTitle"]</h1>
+            <p>@L["HeaderSubtitle"]</p>
+        </header>
+
+        <div class="offers-grid">
+
+            <article class="offer-card">
+                <h2>@L["ArtTitle"]</h2>
+                <p>@L["ArtDescription"]</p>
+                <p>@L["ArtNote"]</p>
+
+                <h3>@L["AvailableFormats"]</h3>
+                <ul>
+                    <li>@L["ArtFormat1"]</li>
+                    <li>@L["ArtFormat2"]</li>
+                    <li>@L["ArtFormat3"]</li>
+                </ul>
+
+                <h3>@L["AlsoAvailable"]</h3>
+                <ul>
+                    <li>@L["Merchandise"]</li>
+                </ul>
+            </article>
+
+            <article class="offer-card">
+                <h2>@L["DigitalTitle"]</h2>
+                <p>@L["DigitalDescription"]</p>
+
+                <h3>@L["Available"]</h3>
+                <ul>
+                    <li>@L["DigitalItem1"]</li>
+                    <li>@L["DigitalItem2"]</li>
+                    <li>@L["DigitalItem3"]</li>
+                </ul>
+            </article>
+
+            <article class="offer-card">
+                <h2>@L["WorkshopTitle"]</h2>
+                <p>@L["WorkshopDescription"]</p>
+                <p>@L["WorkshopExtra"]</p>
+
+                <h3>@L["Available"]</h3>
+                <ul>
+                    <li>@L["WorkshopItem1"]</li>
+                    <li>@L["WorkshopItem2"]</li>
+                    <li>@L["WorkshopItem3"]</li>
+                </ul>
+
+                <p class="offer-age">@L["AgeInfo"]</p>
+            </article>
+
+        </div>
+
+        <div class="request-area">
+            <button type="button">@L["LeaveRequest"]</button>
+        </div>
+
+    </div>
+
+    <footer class="offers-footer">
+        <div class="footer-contact">
+            <strong>@L["ContactTitle"]</strong>
+            <span>@L["Email"]</span>
+            <span>@L["WhatsApp"]</span>
+            <span>@L["Telegram"]</span>
+        </div>
+
+        <p>@L["ContactNote"]</p>
+        <p>@L["ResponseNote"]</p>
+    </footer>
+</section>

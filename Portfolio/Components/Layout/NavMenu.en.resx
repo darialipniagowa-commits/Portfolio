@@ -123,16 +123,13 @@
   <data name="Projects" xml:space="preserve">
     <value>Projects</value>
   </data>
-  <data name="Shop" xml:space="preserve">
-    <value>Shop</value>
-  </data>
-  <data name="Contact" xml:space="preserve">
-    <value>Contact</value>
+  <data name="Offers &amp; Contacts" xml:space="preserve">
+    <value>Offers &amp; Contacts</value>
   </data>
   <data name="Exhibitions" xml:space="preserve">
     <value>Exhibitions</value>
   </data>
   <data name="Gallery" xml:space="preserve">
-    <value>ArtGallery</value>
+    <value>Art Gallery</value>
   </data>
 </root>
